@@ -220,8 +220,11 @@ def _run_review(args) -> int:
             print("--post only works with --pr.", file=sys.stderr)
             return 1
         try:
-            gh.post_review(args.pr, head_sha, review)
-            print(f"\nPosted review with {len(review.comments)} inline comment(s) to {gh.repo}#{args.pr}.")
+            res = gh.post_review(args.pr, head_sha, review)
+            print(
+                f"\n{gh.repo}#{args.pr}: summary {res.summary_action}; {len(res.posted)} new inline comment(s), "
+                f"{len(res.already_posted)} already posted, {len(res.folded)} folded into the summary."
+            )
         except GitHubError as e:
             # Fork PRs get a read-only token: the review is still in the job summary.
             print(f"\nCould not post review ({e}). The review above is in the job summary.", file=sys.stderr)
