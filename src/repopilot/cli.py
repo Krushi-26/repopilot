@@ -192,6 +192,7 @@ def _run_review(args) -> int:
         return 0
 
     router = None
+    llm_off = "disabled with --no-llm"
     if not args.no_llm:
         from repopilot.llm.router import Router
 
@@ -199,8 +200,11 @@ def _run_review(args) -> int:
         if not router.providers:
             print("No LLM key set (GROQ_API_KEY etc.): running automated checks only.", file=sys.stderr)
             router = None
+            llm_off = "no LLM API key configured"
 
-    review = review_diff(files, root, router, max_comments=args.max_comments, min_severity=args.min_severity)
+    review = review_diff(
+        files, root, router, max_comments=args.max_comments, min_severity=args.min_severity, llm_off_reason=llm_off
+    )
     preview = review.to_markdown()
     for c in review.comments:
         preview += f"\n\n`{c.path}:{c.line}` [{c.severity}{', check' if c.source == 'check' else ''}]\n{c.body}"

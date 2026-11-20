@@ -147,6 +147,15 @@ def test_review_without_llm_runs_checks_only(repo: Path):
     review = review_diff(parse_diff(DIFF), repo, router=None)
     assert [c.source for c in review.comments] == ["check"]
     assert review.summary.startswith("Changes 2 file(s)")
+    md = review.to_markdown()
+    assert "LLM review off (no LLM configured)" in md and "2 files reviewed" in md
+
+
+def test_footer_singular_and_llm_on_has_no_off_note(repo: Path):
+    one_file = DIFF.split("diff --git a/assets")[0]
+    review = review_diff(parse_diff(one_file), repo, FakeRouter({"summary": "s", "comments": []}))
+    md = review.to_markdown()
+    assert "1 file reviewed" in md and "LLM review off" not in md
 
 
 def test_llm_failure_degrades_to_checks(repo: Path):

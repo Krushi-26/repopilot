@@ -4,7 +4,7 @@
   "commit": "0e322af87745eff34caffe4df68456ebc20d9068",
   "n_chunks": 814,
   "embed_model": "BAAI/bge-small-en-v1.5",
-  "run_at": "2026-11-20T03:29:57Z",
+  "run_at": "2026-11-20T03:39:37Z",
   "modes": {
     "bm25": {
       "n": 45,

@@ -55,7 +55,8 @@ class Review:
     files_reviewed: int = 0
     files_skipped: list[str] = field(default_factory=list)
     model: str = ""
-    llm_error: str = ""
+    llm_error: str = ""   # the LLM was called and failed
+    llm_off: str = ""     # the LLM was never called, and why
 
     def to_markdown(self) -> str:
         lines = ["### 🧭 RepoPilot review", "", self.summary or "_No summary._", ""]
@@ -64,7 +65,7 @@ class Review:
             lines.append("**Findings:** " + ", ".join(f"{n} {s}" for s, n in counts.items() if n))
         else:
             lines.append("**No issues found.**")
-        meta = [f"{self.files_reviewed} files reviewed"]
+        meta = [f"{self.files_reviewed} file{'' if self.files_reviewed == 1 else 's'} reviewed"]
         if self.files_skipped:
             meta.append(f"{len(self.files_skipped)} skipped (generated/binary/deleted)")
         if self.dropped:
@@ -74,6 +75,8 @@ class Review:
         lines += ["", "<sub>" + " · ".join(meta) + "</sub>"]
         if self.llm_error:
             lines += ["", f"> ⚠️ LLM review unavailable ({self.llm_error}); showing automated checks only."]
+        elif self.llm_off:
+            lines += ["", f"> ℹ️ LLM review off ({self.llm_off}); showing automated checks only."]
         return "\n".join(lines)
 
 
@@ -153,14 +156,17 @@ def review_diff(
     min_severity: str = "suggestion",
     max_diff_chars: int = 16_000,   # with related code + prompt ≈ 6k tokens, inside free-tier TPM limits
     max_related_chars: int = 6_000,
+    llm_off_reason: str = "no LLM configured",
 ) -> Review:
-    """`router=None` runs the automated checks only (no LLM call)."""
+    """`router=None` runs the automated checks only (no LLM call); the review says why."""
     reviewable = [f for f in files if is_reviewable(f)]
     skipped = [f.path or f.old_path for f in files if not is_reviewable(f)]
     symbols: list[Symbol] = changed_symbols(reviewable, root)
     checks = [ReviewComment(f.path, f.line, f.severity, f.body, "check") for f in find_test_gaps(symbols, root)]
 
     review = Review(summary="", files_reviewed=len(reviewable), files_skipped=skipped)
+    if router is None:
+        review.llm_off = llm_off_reason
     llm_comments: list[ReviewComment] = []
     if router is not None and reviewable:
         related = related_code(symbols, local_retriever(root), reviewable)
