@@ -4,19 +4,19 @@
   "commit": "0e322af87745eff34caffe4df68456ebc20d9068",
   "n_chunks": 814,
   "embed_model": "BAAI/bge-small-en-v1.5",
-  "run_at": "2026-11-20T03:20:10Z",
+  "run_at": "2026-11-20T03:28:15Z",
   "modes": {
     "bm25": {
       "n": 45,
-      "file_hit@1": 0.7556,
+      "file_hit@1": 0.7778,
       "span_hit@1": 0.4667,
       "file_hit@3": 0.9333,
       "span_hit@3": 0.6222,
       "file_hit@5": 0.9556,
-      "span_hit@5": 0.7556,
+      "span_hit@5": 0.7778,
       "file_hit@10": 0.9778,
-      "span_hit@10": 0.8222,
-      "mrr@10": 0.5782
+      "span_hit@10": 0.8444,
+      "mrr@10": 0.5827
     },
     "vector": {
       "n": 45,
@@ -37,10 +37,10 @@
       "file_hit@3": 0.9778,
       "span_hit@3": 0.8444,
       "file_hit@5": 1.0,
-      "span_hit@5": 0.9111,
+      "span_hit@5": 0.9333,
       "file_hit@10": 1.0,
       "span_hit@10": 0.9556,
-      "mrr@10": 0.7117
+      "mrr@10": 0.7148
     }
   },
   "per_question": {
@@ -440,8 +440,8 @@
       {
         "id": "q29",
         "question": "How are response hooks called after a request completes?",
-        "file_rank": 3,
-        "span_rank": null,
+        "file_rank": 2,
+        "span_rank": 5,
         "top": [
           "src/requests/models.py:334-349",
           "src/requests/sessions.py:91-103",
@@ -468,7 +468,7 @@
       {
         "id": "q31",
         "question": "How do cookies set by a server end up in the session's cookie jar?",
-        "file_rank": 2,
+        "file_rank": 1,
         "span_rank": null,
         "top": [
           "src/requests/sessions.py:390-449",
@@ -1286,9 +1286,9 @@
         "span_rank": 1,
         "top": [
           "src/requests/api.py:62-73",
-          "src/requests/utils.py:439-441",
-          "src/requests/utils.py:404-406",
           "src/requests/utils.py:372-374",
+          "src/requests/utils.py:404-406",
+          "src/requests/utils.py:439-441",
           "src/requests/sessions.py:593-602"
         ],
         "answer": null
@@ -1705,7 +1705,7 @@
         "id": "q29",
         "question": "How are response hooks called after a request completes?",
         "file_rank": 1,
-        "span_rank": 9,
+        "span_rank": 4,
         "top": [
           "src/requests/hooks.py:1-14",
           "src/requests/sessions.py:91-103",

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from repopilot import config
 from repopilot.ingest.chunk import Chunk
 from repopilot.ingest.index import Index
 from repopilot.retrieval.bm25 import BM25
@@ -62,7 +63,13 @@ class Retriever:
     def search(
         self, query: str, k: int = 8, mode: str = "hybrid", pool: int = 50, weights: dict[str, float] | None = None
     ) -> list[Hit]:
-        """mode: 'bm25', 'vector' or 'hybrid'. `pool` = candidates taken from each retriever."""
+        """mode: 'bm25', 'vector' or 'hybrid', optionally with '+rerank' (e.g. 'hybrid+rerank').
+        `pool` = candidates taken from each retriever."""
+        mode, _, extra = mode.partition("+")
+        if extra == "rerank":
+            return self._rerank(query, self.search(query, k=max(k, self.rerank_depth), mode=mode, pool=pool, weights=weights), k)
+        if extra:
+            raise ValueError(f"Unknown search option '+{extra}'")
         lists: dict[str, list[tuple[int, float]]] = {}
         if mode in ("bm25", "hybrid"):
             lists["bm25"] = self.bm25_search(query, pool)
@@ -79,3 +86,23 @@ class Retriever:
 
         best = sorted(fused, key=lambda i: -fused[i])[:k]
         return [Hit(self.index.chunks[i], fused[i], ranks[i]) for i in best]
+
+    # --- reranking -------------------------------------------------------------------------
+    rerank_model: str = config.RERANK_MODEL
+    rerank_depth: int = config.RERANK_DEPTH
+    rerank_alpha: float = config.RERANK_ALPHA
+
+    def _rerank(self, query: str, hits: list[Hit], k: int) -> list[Hit]:
+        if not hits:
+            return hits
+        from repopilot.retrieval.rerank import blend, rerank_scores, rerank_text
+
+        cands = hits[: self.rerank_depth]
+        scores = rerank_scores(query, [rerank_text(h.chunk.path, h.chunk.symbol, h.chunk.text) for h in cands], self.rerank_model)
+        final = blend(list(range(1, len(cands) + 1)), scores, self.rerank_alpha)
+        order = sorted(range(len(cands)), key=lambda i: -final[i])
+        out = []
+        for new_rank, i in enumerate(order, start=1):
+            h = cands[i]
+            out.append(Hit(h.chunk, final[i], {**h.sources, "rerank": new_rank}))
+        return out[:k]

@@ -35,3 +35,9 @@ MAX_FILE_BYTES = int(os.environ.get("REPOPILOT_MAX_FILE_BYTES", 300_000))
 EMBED_MODEL = os.environ.get("REPOPILOT_EMBED_MODEL", "BAAI/bge-small-en-v1.5")
 TOP_K = int(os.environ.get("REPOPILOT_TOP_K", 8))
 MAX_CONTEXT_CHARS = int(os.environ.get("REPOPILOT_MAX_CONTEXT_CHARS", 24_000))
+
+# Reranking: cross-encoder over the top RERANK_DEPTH hybrid hits. Opt-in (`--rerank`):
+# on the golden set it gained one question at hit@1 for ~1 s/query (README results log).
+RERANK_MODEL = os.environ.get("REPOPILOT_RERANK_MODEL", "Xenova/ms-marco-MiniLM-L-6-v2")
+RERANK_DEPTH = int(os.environ.get("REPOPILOT_RERANK_DEPTH", 20))
+RERANK_ALPHA = float(os.environ.get("REPOPILOT_RERANK_ALPHA", 0.3))  # 1 = reranker only

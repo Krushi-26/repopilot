@@ -24,12 +24,13 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--repo", "-r", help="Index name (default: the only/most recent index)")
         p.add_argument("-k", type=int, default=config.TOP_K)
         p.add_argument("--mode", choices=["hybrid", "bm25", "vector"], default="hybrid")
+        p.add_argument("--rerank", action="store_true", help="Re-score the top 20 with a cross-encoder (~1 s, opt-in)")
 
     sub.add_parser("list", help="List built indexes")
 
     p = sub.add_parser("eval", help="Score retrieval (and optionally answers) against a golden set")
     p.add_argument("--golden", default="evals/golden_requests.json")
-    p.add_argument("--modes", default="auto", help="Comma list of bm25,vector,hybrid (default: all available)")
+    p.add_argument("--modes", default="auto", help="Comma list of bm25,vector,hybrid[,hybrid+rerank] (default: all available, no rerank)")
     p.add_argument("--answers", action="store_true", help="Also generate answers and score citations (uses the LLM)")
     p.add_argument("--out", default="evals/results")
     p.add_argument("--no-embed", action="store_true", help="If the index must be built, build it BM25-only")
@@ -63,6 +64,8 @@ def main(argv: list[str] | None = None) -> int:
 
     retriever = Retriever(load_index(name))
     mode = args.mode if retriever.has_vectors or args.mode == "bm25" else "bm25"
+    if args.rerank:
+        mode += "+rerank"
 
     if args.cmd == "search":
         for i, h in enumerate(retriever.search(args.question, k=args.k, mode=mode), 1):
@@ -110,7 +113,7 @@ def _run_eval(args) -> int:
         modes = ["bm25", "vector", "hybrid"] if retriever.has_vectors else ["bm25"]
     else:
         modes = [m.strip() for m in args.modes.split(",")]
-        if not retriever.has_vectors and set(modes) - {"bm25"}:
+        if not retriever.has_vectors and {m.split("+")[0] for m in modes} - {"bm25"}:
             print("Index has no embeddings; rebuild without --no-embed (needs the 'vector' extra).", file=sys.stderr)
             return 1
 
