@@ -119,8 +119,9 @@ Notes:
 
 ## PR review bot
 
-[`review.yml`](.github/workflows/review.yml) reviews every non-draft PR and posts one review
-with inline comments.
+[`review.yml`](.github/workflows/review.yml) reviews every non-draft PR on every push. It
+keeps one summary comment that it edits in place, and adds an inline comment only for a finding
+it hasn't already posted on that file, so re-pushing doesn't pile up duplicates.
 
 1. **Diff → line map.** The unified diff is parsed into the exact new-file line numbers GitHub
    accepts comments on. Deleted, binary, vendored and generated files are skipped.

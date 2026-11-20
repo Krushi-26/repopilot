@@ -6,7 +6,7 @@ import pytest
 
 from repopilot.llm.router import Completion
 from repopilot.review.diff import is_reviewable, parse_diff
-from repopilot.review.github import GitHub
+from repopilot.review.github import SUMMARY_MARKER, GitHub
 from repopilot.review.reviewer import Review, ReviewComment, parse_model_json, review_diff, validate
 
 DIFF = """diff --git a/pkg/net.py b/pkg/net.py
@@ -173,16 +173,85 @@ def test_min_severity_filters(repo: Path):
     assert review.comments == []
 
 
-def test_post_review_falls_back_when_github_rejects_a_line():
-    calls = []
+class FakeGitHub:
+    """In-memory stand-in for the few GitHub endpoints the bot uses."""
 
-    def handler(req: httpx.Request):
-        body = json.loads(req.content)
-        calls.append(body)
-        return httpx.Response(422 if body["comments"] else 200, json={"id": 1})
+    BOT = {"login": "github-actions[bot]", "type": "Bot"}
 
-    gh = GitHub("t", "o/r", transport=httpx.MockTransport(handler))
-    review = Review("s", [ReviewComment("a.py", 3, "bug", "boom")])
-    gh.post_review(7, "abc", review)
-    assert calls[0]["event"] == "COMMENT" and calls[0]["comments"][0]["side"] == "RIGHT"
-    assert calls[1]["comments"] == [] and "`a.py:3`" in calls[1]["body"]
+    def __init__(self):
+        self.review_comments: list[dict] = []
+        self.issue_comments: list[dict] = []
+        self.next_id = 1
+
+    def handler(self, req: httpx.Request) -> httpx.Response:
+        path, method = req.url.path, req.method
+        body = json.loads(req.content) if req.content else {}
+        if path.endswith("/pulls/7/comments"):
+            if method == "GET":
+                return httpx.Response(200, json=self.review_comments)
+            if body["line"] == 999:
+                return httpx.Response(422, json={"message": "line must be part of the diff"})
+            self.review_comments.append({"id": self._id(), "user": self.BOT, **body})
+            return httpx.Response(201, json=self.review_comments[-1])
+        if path.endswith("/issues/7/comments"):
+            if method == "GET":
+                return httpx.Response(200, json=self.issue_comments)
+            self.issue_comments.append({"id": self._id(), "user": self.BOT, "body": body["body"]})
+            return httpx.Response(201, json=self.issue_comments[-1])
+        if "/issues/comments/" in path and method == "PATCH":
+            cid = int(path.rsplit("/", 1)[1])
+            c = next(c for c in self.issue_comments if c["id"] == cid)
+            c["body"] = body["body"]
+            return httpx.Response(200, json=c)
+        return httpx.Response(404)
+
+    def _id(self) -> int:
+        self.next_id += 1
+        return self.next_id
+
+
+def _gh(fake: FakeGitHub) -> GitHub:
+    return GitHub("t", "o/r", transport=httpx.MockTransport(fake.handler))
+
+
+def _review(*comments) -> Review:
+    return Review("Adds a helper.", list(comments), files_reviewed=1)
+
+
+def test_repeat_pushes_update_summary_and_do_not_duplicate_comments():
+    fake = FakeGitHub()
+    gh = _gh(fake)
+    bug = ReviewComment("a.py", 3, "bug", "Off by one.")
+    gap = ReviewComment("a.py", 10, "suggestion", "No test.", "check")
+
+    first = gh.post_review(7, "aaaaaaa1", _review(bug, gap))
+    assert first.summary_action == "created" and len(first.posted) == 2
+    assert len(fake.issue_comments) == 1 and SUMMARY_MARKER in fake.issue_comments[0]["body"]
+
+    # Second push: same findings, one moved down two lines. Nothing new is posted.
+    moved = ReviewComment("a.py", 5, "bug", "Off by one.")
+    second = gh.post_review(7, "bbbbbbb2", _review(moved, gap))
+    assert second.summary_action == "updated" and second.posted == []
+    assert len(second.already_posted) == 2
+    assert len(fake.review_comments) == 2 and len(fake.issue_comments) == 1
+    assert "bbbbbbb" in fake.issue_comments[0]["body"] and "2 already posted" in fake.issue_comments[0]["body"]
+
+    # Third push: a genuinely new finding is posted; old ones are not.
+    new = ReviewComment("b.py", 1, "risk", "Unbounded loop.")
+    third = gh.post_review(7, "ccccccc3", _review(moved, gap, new))
+    assert [c.path for c in third.posted] == ["b.py"] and len(fake.review_comments) == 3
+
+
+def test_human_comment_with_marker_is_never_edited():
+    fake = FakeGitHub()
+    fake.issue_comments.append({"id": 99, "user": {"login": "alice", "type": "User"}, "body": f"{SUMMARY_MARKER} hi"})
+    res = _gh(fake).post_review(7, "abc1234", _review())
+    assert res.summary_action == "created"
+    assert fake.issue_comments[0]["body"] == f"{SUMMARY_MARKER} hi" and len(fake.issue_comments) == 2
+
+
+def test_unanchorable_line_is_folded_into_summary():
+    fake = FakeGitHub()
+    res = _gh(fake).post_review(7, "abc1234", _review(ReviewComment("a.py", 999, "bug", "Lost line.")))
+    assert res.folded and not fake.review_comments
+    assert "`a.py:999`" in fake.issue_comments[0]["body"]
