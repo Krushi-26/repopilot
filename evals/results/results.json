@@ -1,0 +1,1944 @@
+{
+  "repo": "https://github.com/psf/requests",
+  "ref": "v2.32.3",
+  "commit": "0e322af87745eff34caffe4df68456ebc20d9068",
+  "n_chunks": 814,
+  "embed_model": "BAAI/bge-small-en-v1.5",
+  "run_at": "2026-11-20T03:13:49Z",
+  "modes": {
+    "bm25": {
+      "n": 45,
+      "file_hit@1": 0.7556,
+      "span_hit@1": 0.4667,
+      "file_hit@3": 0.9333,
+      "span_hit@3": 0.6222,
+      "file_hit@5": 0.9556,
+      "span_hit@5": 0.7556,
+      "file_hit@10": 0.9778,
+      "span_hit@10": 0.8222,
+      "mrr@10": 0.5782
+    },
+    "vector": {
+      "n": 45,
+      "file_hit@1": 0.8222,
+      "span_hit@1": 0.6222,
+      "file_hit@3": 0.9333,
+      "span_hit@3": 0.8,
+      "file_hit@5": 0.9778,
+      "span_hit@5": 0.8667,
+      "file_hit@10": 1.0,
+      "span_hit@10": 0.9556,
+      "mrr@10": 0.7293
+    },
+    "hybrid": {
+      "n": 45,
+      "file_hit@1": 0.8222,
+      "span_hit@1": 0.5778,
+      "file_hit@3": 0.9778,
+      "span_hit@3": 0.8444,
+      "file_hit@5": 1.0,
+      "span_hit@5": 0.9111,
+      "file_hit@10": 1.0,
+      "span_hit@10": 0.9556,
+      "mrr@10": 0.7117
+    }
+  },
+  "per_question": {
+    "bm25": [
+      {
+        "id": "q01",
+        "question": "Where are HTTP retries configured for connections?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/adapters.py:202-222",
+          "src/requests/adapters.py:167-201",
+          "src/requests/adapters.py:240-264",
+          "docs/user/advanced.rst:1001-1060",
+          "src/requests/exceptions.py:131-132"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q02",
+        "question": "What happens when a timeout is passed as a (connect, read) tuple?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/adapters.py:613-719",
+          "src/requests/adapters.py:137-164",
+          "src/requests/exceptions.py:71-77",
+          "src/requests/api.py:14-59",
+          "src/requests/exceptions.py:80-84"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q03",
+        "question": "How does a Session follow redirects?",
+        "file_rank": 1,
+        "span_rank": 4,
+        "top": [
+          "src/requests/sessions.py:356-389",
+          "tests/test_requests.py:1908-1925",
+          "src/requests/models.py:769-774",
+          "src/requests/sessions.py:259-280",
+          "src/requests/sessions.py:593-602"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q04",
+        "question": "When is the Authorization header dropped while following a redirect?",
+        "file_rank": 1,
+        "span_rank": 4,
+        "top": [
+          "src/requests/sessions.py:302-331",
+          "src/requests/auth.py:285-303",
+          "src/requests/models.py:51-83",
+          "src/requests/sessions.py:282-300",
+          "src/requests/sessions.py:127-157"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q05",
+        "question": "How is a POST turned into a GET after a 302 or 303 response?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:333-353",
+          "src/requests/models.py:51-83",
+          "tests/test_requests.py:294-299",
+          "tests/test_requests.py:280-285",
+          "src/requests/api.py:103-115"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q06",
+        "question": "What is the default limit on the number of redirects?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:390-449",
+          "src/requests/sessions.py:1-60",
+          "src/requests/api.py:88-100",
+          "src/requests/models.py:51-83",
+          "src/requests/adapters.py:167-201"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q07",
+        "question": "How does requests pick a CA certificate bundle from environment variables?",
+        "file_rank": 2,
+        "span_rank": 2,
+        "top": [
+          "src/requests/certs.py:1-17",
+          "src/requests/sessions.py:750-779",
+          "src/requests/adapters.py:304-357",
+          "docs/user/advanced.rst:601-660",
+          "src/requests/adapters.py:396-444"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q08",
+        "question": "Where are credentials loaded from the user's netrc file?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:204-258",
+          "docs/user/authentication.rst:1-60",
+          "src/requests/sessions.py:282-300",
+          "src/requests/adapters.py:304-357",
+          "docs/user/quickstart.rst:201-260"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q09",
+        "question": "How is a JSON body serialized when you pass json= to a request?",
+        "file_rank": 3,
+        "span_rank": 4,
+        "top": [
+          "src/requests/sessions.py:626-637",
+          "src/requests/api.py:103-115",
+          "src/requests/models.py:230-257",
+          "src/requests/models.py:494-570",
+          "src/requests/api.py:118-130"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q10",
+        "question": "When does an upload use chunked transfer encoding?",
+        "file_rank": 3,
+        "span_rank": null,
+        "top": [
+          "src/requests/exceptions.py:119-120",
+          "tests/test_requests.py:2180-2189",
+          "src/requests/models.py:572-586",
+          "tests/test_lowlevel.py:24-36",
+          "src/requests/models.py:230-257"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q11",
+        "question": "How is the Content-Length of a request body calculated?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:572-586",
+          "src/requests/models.py:494-570",
+          "src/requests/models.py:588-608",
+          "src/requests/sessions.py:209-268",
+          "src/requests/utils.py:135-201"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q12",
+        "question": "How does response.text decide which character encoding to decode with?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/models.py:947-978",
+          "src/requests/models.py:909-945",
+          "src/requests/models.py:789-797",
+          "src/requests/utils.py:564-578",
+          "src/requests/models.py:658-703"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q13",
+        "question": "How is the encoding guessed when the server doesn't declare a charset?",
+        "file_rank": 1,
+        "span_rank": 3,
+        "top": [
+          "src/requests/models.py:909-945",
+          "src/requests/utils.py:539-561",
+          "src/requests/models.py:789-797",
+          "src/requests/utils.py:591-627",
+          "src/requests/__init__.py:105-164"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q14",
+        "question": "What raises an exception for 4xx and 5xx status codes?",
+        "file_rank": 2,
+        "span_rank": null,
+        "top": [
+          "src/requests/status_codes.py:109-125",
+          "src/requests/models.py:51-83",
+          "src/requests/status_codes.py:1-60",
+          "src/requests/__init__.py:155-184",
+          "src/requests/status_codes.py:126-128"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q15",
+        "question": "How is a streamed response body read piece by piece?",
+        "file_rank": 1,
+        "span_rank": null,
+        "top": [
+          "src/requests/models.py:494-570",
+          "src/requests/utils.py:1081-1096",
+          "src/requests/models.py:106-134",
+          "src/requests/adapters.py:613-719",
+          "docs/user/advanced.rst:301-360"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q16",
+        "question": "How can I iterate over a response one line at a time?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:857-888",
+          "docs/user/advanced.rst:501-560",
+          "src/requests/utils.py:581-588",
+          "src/requests/cookies.py:492-518",
+          "src/requests/cookies.py:194-204"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q17",
+        "question": "How is the Basic auth header value built from a username and password?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:76-96",
+          "src/requests/auth.py:25-66",
+          "src/requests/auth.py:99-104",
+          "src/requests/auth.py:110-114",
+          "src/requests/sessions.py:302-331"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q18",
+        "question": "How does Digest authentication compute its response hash?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:126-234",
+          "src/requests/auth.py:107-109",
+          "docs/user/authentication.rst:1-60",
+          "src/requests/sessions.py:282-300",
+          "docs/user/authentication.rst:51-110"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q19",
+        "question": "What happens when the server challenges a request with a 401 under digest auth?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:241-283",
+          "src/requests/auth.py:285-303",
+          "src/requests/auth.py:236-239",
+          "src/requests/auth.py:107-109",
+          "src/requests/auth.py:116-124"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q20",
+        "question": "How are credentials sent to an authenticating proxy?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/adapters.py:592-611",
+          "src/requests/adapters.py:546-576",
+          "src/requests/adapters.py:446-493",
+          "src/requests/adapters.py:266-302",
+          "src/requests/sessions.py:390-449"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q21",
+        "question": "How does requests decide that a host should skip the proxy because of NO_PROXY?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:765-823",
+          "src/requests/utils.py:826-835",
+          "src/requests/utils.py:864-888",
+          "src/requests/sessions.py:750-779",
+          "src/requests/utils.py:101-125"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q22",
+        "question": "Which proxy is chosen for a given URL scheme and hostname?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:838-861",
+          "src/requests/utils.py:765-823",
+          "src/requests/adapters.py:546-576",
+          "src/requests/utils.py:989-1015",
+          "src/requests/adapters.py:495-534"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q23",
+        "question": "How are SOCKS proxies supported?",
+        "file_rank": 1,
+        "span_rank": null,
+        "top": [
+          "src/requests/adapters.py:546-576",
+          "src/requests/adapters.py:51-89",
+          "tests/test_utils.py:510-533",
+          "docs/user/advanced.rst:651-710",
+          "tests/test_utils.py:493-509"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q24",
+        "question": "Where is TLS certificate verification set up on a connection?",
+        "file_rank": 1,
+        "span_rank": 5,
+        "top": [
+          "src/requests/adapters.py:396-444",
+          "src/requests/sessions.py:390-449",
+          "src/requests/adapters.py:446-493",
+          "src/requests/adapters.py:137-164",
+          "src/requests/adapters.py:304-357"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q25",
+        "question": "How are connection pools created and how big are they?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/adapters.py:167-201",
+          "src/requests/adapters.py:240-264",
+          "src/requests/adapters.py:396-444",
+          "src/requests/adapters.py:266-302",
+          "src/requests/exceptions.py:59-60"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q26",
+        "question": "How does a session pick which transport adapter handles a URL?",
+        "file_rank": 2,
+        "span_rank": 2,
+        "top": [
+          "src/requests/adapters.py:167-201",
+          "src/requests/sessions.py:781-792",
+          "docs/user/advanced.rst:951-1010",
+          "src/requests/sessions.py:302-331",
+          "src/requests/adapters.py:137-164"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q27",
+        "question": "How do you register a custom adapter for a URL prefix?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/sessions.py:781-792",
+          "src/requests/sessions.py:799-808",
+          "src/requests/adapters.py:495-534",
+          "tests/test_requests.py:1619-1641",
+          "tests/test_requests.py:1643-1651"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q28",
+        "question": "How are session-level defaults combined with per-request settings?",
+        "file_rank": 1,
+        "span_rank": null,
+        "top": [
+          "src/requests/sessions.py:390-449",
+          "src/requests/sessions.py:500-591",
+          "src/requests/sessions.py:457-498",
+          "docs/user/advanced.rst:151-210",
+          "src/requests/api.py:14-59"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q29",
+        "question": "How are response hooks called after a request completes?",
+        "file_rank": 3,
+        "span_rank": null,
+        "top": [
+          "src/requests/models.py:334-349",
+          "src/requests/sessions.py:91-103",
+          "src/requests/hooks.py:1-14",
+          "src/requests/models.py:351-377",
+          "src/requests/sessions.py:673-748"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q30",
+        "question": "How is the time taken by a request measured?",
+        "file_rank": 3,
+        "span_rank": 4,
+        "top": [
+          "src/requests/models.py:658-703",
+          "src/requests/cookies.py:492-518",
+          "src/requests/sessions.py:1-60",
+          "src/requests/sessions.py:673-748",
+          "src/requests/exceptions.py:87-88"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q31",
+        "question": "How do cookies set by a server end up in the session's cookie jar?",
+        "file_rank": 2,
+        "span_rank": null,
+        "top": [
+          "src/requests/sessions.py:390-449",
+          "src/requests/cookies.py:542-561",
+          "src/requests/cookies.py:358-364",
+          "src/requests/models.py:658-703",
+          "src/requests/sessions.py:457-498"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q32",
+        "question": "What happens if two cookies with the same name exist for different domains?",
+        "file_rank": 1,
+        "span_rank": 6,
+        "top": [
+          "src/requests/cookies.py:151-167",
+          "src/requests/cookies.py:277-283",
+          "src/requests/cookies.py:206-223",
+          "src/requests/cookies.py:293-304",
+          "src/requests/cookies.py:194-204"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q33",
+        "question": "How do you build a cookie jar from a plain dictionary?",
+        "file_rank": 1,
+        "span_rank": 4,
+        "top": [
+          "src/requests/cookies.py:306-319",
+          "src/requests/utils.py:478-486",
+          "src/requests/utils.py:467-475",
+          "src/requests/cookies.py:521-539",
+          "src/requests/cookies.py:542-561"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q34",
+        "question": "How do header lookups ignore upper and lower case?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/structures.py:46-49",
+          "src/requests/structures.py:13-39",
+          "src/requests/structures.py:67-73",
+          "src/requests/structures.py:63-65",
+          "src/requests/structures.py:51-52"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q35",
+        "question": "What is the default User-Agent string sent with requests?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:891-897",
+          "src/requests/utils.py:900-911",
+          "src/requests/sessions.py:390-449",
+          "src/requests/adapters.py:396-444",
+          "src/requests/cookies.py:140-148"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q36",
+        "question": "Which error is raised for a URL without a scheme, like example.com?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:409-481",
+          "src/requests/sessions.py:159-218",
+          "src/requests/utils.py:989-1015",
+          "src/requests/exceptions.py:99-100",
+          "src/requests/exceptions.py:103-104"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q37",
+        "question": "How are internationalized domain names converted before sending?",
+        "file_rank": null,
+        "span_rank": null,
+        "top": [
+          "src/requests/cookies.py:151-167",
+          "src/requests/cookies.py:366-384",
+          "src/requests/cookies.py:306-319",
+          "src/requests/cookies.py:386-413",
+          "src/requests/cookies.py:293-304"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q38",
+        "question": "How are query string parameters encoded into the URL?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:409-481",
+          "src/requests/models.py:85-104",
+          "src/requests/api.py:62-73",
+          "src/requests/cookies.py:49-67",
+          "src/requests/utils.py:1064-1078"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q39",
+        "question": "How are multipart file uploads encoded?",
+        "file_rank": 4,
+        "span_rank": 9,
+        "top": [
+          "docs/user/advanced.rst:351-410",
+          "docs/user/quickstart.rst:301-360",
+          "docs/user/quickstart.rst:251-310",
+          "src/requests/models.py:399-407",
+          "src/requests/api.py:14-59"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q40",
+        "question": "How is the request body rewound before it is resent on a redirect?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:1081-1096",
+          "src/requests/models.py:494-570",
+          "src/requests/sessions.py:209-268",
+          "src/requests/auth.py:285-303",
+          "src/requests/models.py:382-391"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q41",
+        "question": "How are header names and values checked for illegal characters?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:1034-1042",
+          "src/requests/utils.py:660-679",
+          "src/requests/utils.py:636-657",
+          "src/requests/cookies.py:234-240",
+          "src/requests/cookies.py:521-539"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q42",
+        "question": "Where are status code names like codes.ok defined?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/status_codes.py:109-125",
+          "src/requests/status_codes.py:1-60",
+          "src/requests/models.py:754-767",
+          "src/requests/models.py:730-738",
+          "src/requests/models.py:740-748"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q43",
+        "question": "What happens when the response body is not valid JSON?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:947-978",
+          "src/requests/api.py:103-115",
+          "src/requests/sessions.py:626-637",
+          "src/requests/api.py:118-130",
+          "src/requests/api.py:133-145"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q44",
+        "question": "What does requests.get do under the hood?",
+        "file_rank": 8,
+        "span_rank": 8,
+        "top": [
+          "src/requests/adapters.py:167-201",
+          "src/requests/cookies.py:75-76",
+          "src/requests/sessions.py:593-602",
+          "docs/user/authentication.rst:101-145",
+          "src/requests/cookies.py:46-47"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q45",
+        "question": "How are connect timeouts distinguished from read timeouts in the exceptions?",
+        "file_rank": 1,
+        "span_rank": 3,
+        "top": [
+          "src/requests/exceptions.py:71-77",
+          "src/requests/adapters.py:613-719",
+          "src/requests/exceptions.py:80-84",
+          "src/requests/adapters.py:1-60",
+          "src/requests/exceptions.py:87-88"
+        ],
+        "answer": null
+      }
+    ],
+    "vector": [
+      {
+        "id": "q01",
+        "question": "Where are HTTP retries configured for connections?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/adapters.py:202-222",
+          "src/requests/exceptions.py:131-132",
+          "src/requests/auth.py:285-303",
+          "src/requests/adapters.py:167-201",
+          "src/requests/auth.py:116-124"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q02",
+        "question": "What happens when a timeout is passed as a (connect, read) tuple?",
+        "file_rank": 4,
+        "span_rank": 4,
+        "top": [
+          "src/requests/exceptions.py:71-77",
+          "src/requests/exceptions.py:87-88",
+          "src/requests/exceptions.py:80-84",
+          "src/requests/adapters.py:613-719",
+          "src/requests/models.py:857-888"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q03",
+        "question": "How does a Session follow redirects?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:159-218",
+          "src/requests/sessions.py:259-280",
+          "src/requests/sessions.py:209-268",
+          "src/requests/sessions.py:106-106",
+          "src/requests/sessions.py:333-353"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q04",
+        "question": "When is the Authorization header dropped while following a redirect?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:127-157",
+          "src/requests/sessions.py:282-300",
+          "src/requests/sessions.py:209-268",
+          "src/requests/auth.py:285-303",
+          "src/requests/auth.py:236-239"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q05",
+        "question": "How is a POST turned into a GET after a 302 or 303 response?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:333-353",
+          "src/requests/models.py:658-703",
+          "src/requests/sessions.py:159-218",
+          "src/requests/sessions.py:209-268",
+          "src/requests/cookies.py:49-67"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q06",
+        "question": "What is the default limit on the number of redirects?",
+        "file_rank": 2,
+        "span_rank": 6,
+        "top": [
+          "src/requests/exceptions.py:95-96",
+          "src/requests/sessions.py:127-157",
+          "src/requests/auth.py:236-239",
+          "src/requests/sessions.py:159-218",
+          "src/requests/sessions.py:259-280"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q07",
+        "question": "How does requests pick a CA certificate bundle from environment variables?",
+        "file_rank": 3,
+        "span_rank": 3,
+        "top": [
+          "src/requests/certs.py:1-17",
+          "src/requests/adapters.py:304-357",
+          "src/requests/sessions.py:750-779",
+          "src/requests/utils.py:51-110",
+          "src/requests/adapters.py:396-444"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q08",
+        "question": "Where are credentials loaded from the user's netrc file?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:204-258",
+          "src/requests/auth.py:110-114",
+          "src/requests/utils.py:51-110",
+          "src/requests/auth.py:76-96",
+          "src/requests/auth.py:1-24"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q09",
+        "question": "How is a JSON body serialized when you pass json= to a request?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/models.py:947-978",
+          "src/requests/models.py:494-570",
+          "src/requests/api.py:118-130",
+          "src/requests/api.py:103-115",
+          "src/requests/api.py:14-59"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q10",
+        "question": "When does an upload use chunked transfer encoding?",
+        "file_rank": 2,
+        "span_rank": 3,
+        "top": [
+          "src/requests/exceptions.py:119-120",
+          "src/requests/models.py:799-855",
+          "src/requests/models.py:494-570",
+          "src/requests/models.py:572-586",
+          "src/requests/utils.py:135-201"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q11",
+        "question": "How is the Content-Length of a request body calculated?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:572-586",
+          "src/requests/utils.py:135-201",
+          "src/requests/models.py:799-855",
+          "src/requests/models.py:658-703",
+          "src/requests/models.py:494-570"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q12",
+        "question": "How does response.text decide which character encoding to decode with?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:909-945",
+          "src/requests/models.py:947-978",
+          "src/requests/utils.py:564-578",
+          "src/requests/utils.py:591-627",
+          "src/requests/utils.py:957-986"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q13",
+        "question": "How is the encoding guessed when the server doesn't declare a charset?",
+        "file_rank": 2,
+        "span_rank": 2,
+        "top": [
+          "src/requests/utils.py:957-986",
+          "src/requests/models.py:789-797",
+          "src/requests/models.py:909-945",
+          "src/requests/utils.py:628-635",
+          "src/requests/models.py:947-978"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q14",
+        "question": "What raises an exception for 4xx and 5xx status codes?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:997-1024",
+          "src/requests/status_codes.py:1-60",
+          "src/requests/status_codes.py:126-128",
+          "src/requests/exceptions.py:137-141",
+          "src/requests/exceptions.py:103-104"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q15",
+        "question": "How is a streamed response body read piece by piece?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:799-855",
+          "src/requests/models.py:857-888",
+          "src/requests/models.py:890-907",
+          "src/requests/models.py:658-703",
+          "src/requests/models.py:494-570"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q16",
+        "question": "How can I iterate over a response one line at a time?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:857-888",
+          "src/requests/models.py:750-752",
+          "src/requests/hooks.py:17-21",
+          "src/requests/utils.py:564-578",
+          "src/requests/models.py:799-855"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q17",
+        "question": "How is the Basic auth header value built from a username and password?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:25-66",
+          "src/requests/auth.py:76-96",
+          "src/requests/utils.py:1018-1031",
+          "src/requests/auth.py:305-311",
+          "src/requests/auth.py:110-114"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q18",
+        "question": "How does Digest authentication compute its response hash?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:126-234",
+          "src/requests/auth.py:241-283",
+          "src/requests/auth.py:107-109",
+          "src/requests/auth.py:285-303",
+          "src/requests/auth.py:1-24"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q19",
+        "question": "What happens when the server challenges a request with a 401 under digest auth?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:241-283",
+          "src/requests/auth.py:107-109",
+          "src/requests/auth.py:126-234",
+          "src/requests/auth.py:285-303",
+          "src/requests/auth.py:236-239"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q20",
+        "question": "How are credentials sent to an authenticating proxy?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:99-104",
+          "src/requests/adapters.py:592-611",
+          "src/requests/sessions.py:302-331",
+          "src/requests/auth.py:76-96",
+          "src/requests/utils.py:51-110"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q21",
+        "question": "How does requests decide that a host should skip the proxy because of NO_PROXY?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:765-823",
+          "src/requests/utils.py:101-125",
+          "src/requests/utils.py:864-888",
+          "src/requests/sessions.py:302-331",
+          "src/requests/adapters.py:546-576"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q22",
+        "question": "Which proxy is chosen for a given URL scheme and hostname?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:838-861",
+          "src/requests/utils.py:765-823",
+          "src/requests/adapters.py:546-576",
+          "src/requests/utils.py:864-888",
+          "src/requests/utils.py:101-125"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q23",
+        "question": "How are SOCKS proxies supported?",
+        "file_rank": 1,
+        "span_rank": 7,
+        "top": [
+          "src/requests/adapters.py:51-89",
+          "src/requests/adapters.py:546-576",
+          "src/requests/utils.py:838-861",
+          "src/requests/utils.py:864-888",
+          "src/requests/sessions.py:302-331"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q24",
+        "question": "Where is TLS certificate verification set up on a connection?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/adapters.py:446-493",
+          "src/requests/adapters.py:304-357",
+          "src/requests/adapters.py:396-444",
+          "src/requests/adapters.py:613-719",
+          "src/requests/adapters.py:90-134"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q25",
+        "question": "How are connection pools created and how big are they?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/adapters.py:240-264",
+          "src/requests/adapters.py:202-222",
+          "src/requests/adapters.py:90-134",
+          "src/requests/adapters.py:396-444",
+          "src/requests/adapters.py:167-201"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q26",
+        "question": "How does a session pick which transport adapter handles a URL?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:781-792",
+          "src/requests/adapters.py:167-201",
+          "src/requests/adapters.py:1-60",
+          "src/requests/sessions.py:799-808",
+          "src/requests/adapters.py:137-164"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q27",
+        "question": "How do you register a custom adapter for a URL prefix?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/sessions.py:781-792",
+          "src/requests/sessions.py:799-808",
+          "src/requests/adapters.py:51-89",
+          "src/requests/adapters.py:546-576",
+          "src/requests/adapters.py:167-201"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q28",
+        "question": "How are session-level defaults combined with per-request settings?",
+        "file_rank": 1,
+        "span_rank": 3,
+        "top": [
+          "src/requests/sessions.py:390-449",
+          "src/requests/sessions.py:1-60",
+          "src/requests/sessions.py:61-88",
+          "src/requests/sessions.py:356-389",
+          "src/requests/sessions.py:604-613"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q29",
+        "question": "How are response hooks called after a request completes?",
+        "file_rank": 1,
+        "span_rank": 6,
+        "top": [
+          "src/requests/hooks.py:17-21",
+          "src/requests/hooks.py:1-14",
+          "src/requests/models.py:658-703",
+          "src/requests/hooks.py:15-16",
+          "src/requests/sessions.py:91-103"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q30",
+        "question": "How is the time taken by a request measured?",
+        "file_rank": 3,
+        "span_rank": 5,
+        "top": [
+          "src/requests/models.py:658-703",
+          "src/requests/adapters.py:613-719",
+          "src/requests/sessions.py:500-591",
+          "src/requests/sessions.py:1-60",
+          "src/requests/sessions.py:673-748"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q31",
+        "question": "How do cookies set by a server end up in the session's cookie jar?",
+        "file_rank": 1,
+        "span_rank": null,
+        "top": [
+          "src/requests/cookies.py:358-364",
+          "src/requests/cookies.py:349-356",
+          "src/requests/cookies.py:422-426",
+          "src/requests/cookies.py:440-452",
+          "src/requests/cookies.py:206-223"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q32",
+        "question": "What happens if two cookies with the same name exist for different domains?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/cookies.py:386-413",
+          "src/requests/cookies.py:293-304",
+          "src/requests/cookies.py:194-204",
+          "src/requests/cookies.py:366-384",
+          "src/requests/cookies.py:206-223"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q33",
+        "question": "How do you build a cookie jar from a plain dictionary?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/cookies.py:521-539",
+          "src/requests/utils.py:467-475",
+          "src/requests/cookies.py:234-240",
+          "src/requests/cookies.py:440-452",
+          "src/requests/cookies.py:306-319"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q34",
+        "question": "How do header lookups ignore upper and lower case?",
+        "file_rank": 4,
+        "span_rank": 4,
+        "top": [
+          "src/requests/utils.py:900-911",
+          "src/requests/models.py:483-492",
+          "src/requests/utils.py:1034-1042",
+          "src/requests/structures.py:13-39",
+          "src/requests/utils.py:1045-1061"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q35",
+        "question": "What is the default User-Agent string sent with requests?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:891-897",
+          "src/requests/utils.py:900-911",
+          "src/requests/__version__.py:1-14",
+          "src/requests/auth.py:25-66",
+          "src/requests/models.py:84-84"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q36",
+        "question": "Which error is raised for a URL without a scheme, like example.com?",
+        "file_rank": 7,
+        "span_rank": 7,
+        "top": [
+          "src/requests/exceptions.py:103-104",
+          "src/requests/exceptions.py:99-100",
+          "src/requests/exceptions.py:107-108",
+          "src/requests/exceptions.py:91-92",
+          "src/requests/utils.py:989-1015"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q37",
+        "question": "How are internationalized domain names converted before sending?",
+        "file_rank": 1,
+        "span_rank": null,
+        "top": [
+          "src/requests/models.py:409-481",
+          "src/requests/_internal_utils.py:1-24",
+          "src/requests/sessions.py:209-268",
+          "src/requests/cookies.py:455-489",
+          "src/requests/utils.py:989-1015"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q38",
+        "question": "How are query string parameters encoded into the URL?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:106-134",
+          "src/requests/models.py:409-481",
+          "src/requests/api.py:62-73",
+          "src/requests/models.py:85-104",
+          "src/requests/compat.py:78-94"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q39",
+        "question": "How are multipart file uploads encoded?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:136-203",
+          "src/requests/models.py:494-570",
+          "src/requests/utils.py:135-201",
+          "src/requests/exceptions.py:119-120",
+          "src/requests/_internal_utils.py:1-24"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q40",
+        "question": "How is the request body rewound before it is resent on a redirect?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:1081-1096",
+          "src/requests/sessions.py:209-268",
+          "src/requests/sessions.py:333-353",
+          "src/requests/sessions.py:159-218",
+          "src/requests/sessions.py:259-280"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q41",
+        "question": "How are header names and values checked for illegal characters?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:1034-1042",
+          "src/requests/utils.py:1045-1061",
+          "src/requests/_internal_utils.py:1-24",
+          "src/requests/utils.py:539-561",
+          "src/requests/utils.py:442-464"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q42",
+        "question": "Where are status code names like codes.ok defined?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/status_codes.py:1-60",
+          "src/requests/status_codes.py:109-125",
+          "src/requests/models.py:754-767",
+          "src/requests/models.py:727-728",
+          "src/requests/status_codes.py:126-128"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q43",
+        "question": "What happens when the response body is not valid JSON?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:947-978",
+          "src/requests/models.py:494-570",
+          "src/requests/models.py:658-703",
+          "src/requests/exceptions.py:27-28",
+          "src/requests/exceptions.py:123-124"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q44",
+        "question": "What does requests.get do under the hood?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/api.py:62-73",
+          "src/requests/utils.py:372-374",
+          "src/requests/utils.py:404-406",
+          "src/requests/utils.py:439-441",
+          "src/requests/sessions.py:593-602"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q45",
+        "question": "How are connect timeouts distinguished from read timeouts in the exceptions?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/exceptions.py:71-77",
+          "src/requests/exceptions.py:80-84",
+          "src/requests/exceptions.py:87-88",
+          "src/requests/adapters.py:613-719",
+          "src/requests/exceptions.py:59-60"
+        ],
+        "answer": null
+      }
+    ],
+    "hybrid": [
+      {
+        "id": "q01",
+        "question": "Where are HTTP retries configured for connections?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/adapters.py:202-222",
+          "src/requests/exceptions.py:131-132",
+          "src/requests/adapters.py:167-201",
+          "src/requests/adapters.py:495-534",
+          "src/requests/auth.py:107-109"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q02",
+        "question": "What happens when a timeout is passed as a (connect, read) tuple?",
+        "file_rank": 2,
+        "span_rank": 2,
+        "top": [
+          "src/requests/exceptions.py:71-77",
+          "src/requests/adapters.py:613-719",
+          "src/requests/exceptions.py:80-84",
+          "src/requests/exceptions.py:87-88",
+          "src/requests/adapters.py:137-164"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q03",
+        "question": "How does a Session follow redirects?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:259-280",
+          "src/requests/sessions.py:356-389",
+          "src/requests/sessions.py:159-218",
+          "src/requests/sessions.py:593-602",
+          "src/requests/sessions.py:615-624"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q04",
+        "question": "When is the Authorization header dropped while following a redirect?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:127-157",
+          "src/requests/sessions.py:282-300",
+          "src/requests/auth.py:285-303",
+          "src/requests/models.py:51-83",
+          "src/requests/sessions.py:302-331"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q05",
+        "question": "How is a POST turned into a GET after a 302 or 303 response?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:333-353",
+          "src/requests/sessions.py:626-637",
+          "src/requests/models.py:51-83",
+          "src/requests/api.py:103-115",
+          "src/requests/api.py:62-73"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q06",
+        "question": "What is the default limit on the number of redirects?",
+        "file_rank": 2,
+        "span_rank": 3,
+        "top": [
+          "src/requests/exceptions.py:95-96",
+          "src/requests/sessions.py:127-157",
+          "src/requests/models.py:51-83",
+          "src/requests/sessions.py:390-449",
+          "src/requests/sessions.py:159-218"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q07",
+        "question": "How does requests pick a CA certificate bundle from environment variables?",
+        "file_rank": 3,
+        "span_rank": 3,
+        "top": [
+          "src/requests/certs.py:1-17",
+          "src/requests/adapters.py:304-357",
+          "src/requests/sessions.py:750-779",
+          "src/requests/adapters.py:396-444",
+          "src/requests/adapters.py:137-164"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q08",
+        "question": "Where are credentials loaded from the user's netrc file?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:204-258",
+          "src/requests/utils.py:51-110",
+          "src/requests/sessions.py:282-300",
+          "src/requests/adapters.py:396-444",
+          "src/requests/adapters.py:304-357"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q09",
+        "question": "How is a JSON body serialized when you pass json= to a request?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:494-570",
+          "src/requests/api.py:103-115",
+          "src/requests/models.py:947-978",
+          "src/requests/api.py:118-130",
+          "src/requests/sessions.py:626-637"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q10",
+        "question": "When does an upload use chunked transfer encoding?",
+        "file_rank": 2,
+        "span_rank": 3,
+        "top": [
+          "src/requests/exceptions.py:119-120",
+          "src/requests/models.py:572-586",
+          "src/requests/models.py:494-570",
+          "src/requests/models.py:799-855",
+          "src/requests/models.py:947-978"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q11",
+        "question": "How is the Content-Length of a request body calculated?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:572-586",
+          "src/requests/utils.py:135-201",
+          "src/requests/models.py:494-570",
+          "src/requests/models.py:799-855",
+          "src/requests/models.py:588-608"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q12",
+        "question": "How does response.text decide which character encoding to decode with?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:909-945",
+          "src/requests/models.py:947-978",
+          "src/requests/utils.py:564-578",
+          "src/requests/models.py:789-797",
+          "src/requests/utils.py:591-627"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q13",
+        "question": "How is the encoding guessed when the server doesn't declare a charset?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/models.py:909-945",
+          "src/requests/models.py:789-797",
+          "src/requests/models.py:947-978",
+          "src/requests/utils.py:539-561",
+          "src/requests/exceptions.py:119-120"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q14",
+        "question": "What raises an exception for 4xx and 5xx status codes?",
+        "file_rank": 3,
+        "span_rank": 4,
+        "top": [
+          "src/requests/status_codes.py:1-60",
+          "src/requests/status_codes.py:126-128",
+          "src/requests/models.py:51-83",
+          "src/requests/models.py:997-1024",
+          "src/requests/status_codes.py:109-125"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q15",
+        "question": "How is a streamed response body read piece by piece?",
+        "file_rank": 1,
+        "span_rank": 3,
+        "top": [
+          "src/requests/models.py:494-570",
+          "src/requests/utils.py:1081-1096",
+          "src/requests/models.py:799-855",
+          "src/requests/models.py:890-907",
+          "src/requests/models.py:711-717"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q16",
+        "question": "How can I iterate over a response one line at a time?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:857-888",
+          "src/requests/utils.py:581-588",
+          "src/requests/hooks.py:17-21",
+          "src/requests/models.py:658-703",
+          "src/requests/models.py:799-855"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q17",
+        "question": "How is the Basic auth header value built from a username and password?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:25-66",
+          "src/requests/auth.py:76-96",
+          "src/requests/auth.py:110-114",
+          "src/requests/auth.py:305-311",
+          "src/requests/utils.py:1018-1031"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q18",
+        "question": "How does Digest authentication compute its response hash?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:126-234",
+          "src/requests/auth.py:107-109",
+          "src/requests/auth.py:241-283",
+          "src/requests/auth.py:285-303",
+          "src/requests/auth.py:305-311"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q19",
+        "question": "What happens when the server challenges a request with a 401 under digest auth?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/auth.py:241-283",
+          "src/requests/auth.py:107-109",
+          "src/requests/auth.py:285-303",
+          "src/requests/auth.py:236-239",
+          "src/requests/auth.py:126-234"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q20",
+        "question": "How are credentials sent to an authenticating proxy?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/adapters.py:592-611",
+          "src/requests/adapters.py:446-493",
+          "src/requests/auth.py:99-104",
+          "src/requests/utils.py:864-888",
+          "src/requests/utils.py:101-125"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q21",
+        "question": "How does requests decide that a host should skip the proxy because of NO_PROXY?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:765-823",
+          "src/requests/utils.py:864-888",
+          "src/requests/utils.py:101-125",
+          "src/requests/sessions.py:302-331",
+          "src/requests/sessions.py:127-157"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q22",
+        "question": "Which proxy is chosen for a given URL scheme and hostname?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:838-861",
+          "src/requests/utils.py:765-823",
+          "src/requests/adapters.py:546-576",
+          "src/requests/utils.py:864-888",
+          "src/requests/adapters.py:495-534"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q23",
+        "question": "How are SOCKS proxies supported?",
+        "file_rank": 1,
+        "span_rank": 6,
+        "top": [
+          "src/requests/adapters.py:51-89",
+          "src/requests/adapters.py:546-576",
+          "src/requests/utils.py:864-888",
+          "src/requests/utils.py:838-861",
+          "src/requests/sessions.py:302-331"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q24",
+        "question": "Where is TLS certificate verification set up on a connection?",
+        "file_rank": 1,
+        "span_rank": 3,
+        "top": [
+          "src/requests/adapters.py:446-493",
+          "src/requests/adapters.py:396-444",
+          "src/requests/adapters.py:304-357",
+          "src/requests/adapters.py:613-719",
+          "src/requests/sessions.py:390-449"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q25",
+        "question": "How are connection pools created and how big are they?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/adapters.py:240-264",
+          "src/requests/adapters.py:167-201",
+          "src/requests/adapters.py:396-444",
+          "src/requests/adapters.py:495-534",
+          "src/requests/adapters.py:446-493"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q26",
+        "question": "How does a session pick which transport adapter handles a URL?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/sessions.py:781-792",
+          "src/requests/adapters.py:167-201",
+          "src/requests/adapters.py:137-164",
+          "src/requests/sessions.py:799-808",
+          "src/requests/sessions.py:259-280"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q27",
+        "question": "How do you register a custom adapter for a URL prefix?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/sessions.py:781-792",
+          "src/requests/sessions.py:799-808",
+          "src/requests/adapters.py:495-534",
+          "src/requests/adapters.py:546-576",
+          "src/requests/adapters.py:167-201"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q28",
+        "question": "How are session-level defaults combined with per-request settings?",
+        "file_rank": 1,
+        "span_rank": 4,
+        "top": [
+          "src/requests/sessions.py:390-449",
+          "src/requests/sessions.py:500-591",
+          "src/requests/sessions.py:457-498",
+          "src/requests/sessions.py:61-88",
+          "src/requests/sessions.py:1-60"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q29",
+        "question": "How are response hooks called after a request completes?",
+        "file_rank": 1,
+        "span_rank": 9,
+        "top": [
+          "src/requests/hooks.py:1-14",
+          "src/requests/sessions.py:91-103",
+          "src/requests/hooks.py:17-21",
+          "src/requests/sessions.py:673-748",
+          "src/requests/models.py:258-290"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q30",
+        "question": "How is the time taken by a request measured?",
+        "file_rank": 2,
+        "span_rank": 3,
+        "top": [
+          "src/requests/models.py:658-703",
+          "src/requests/sessions.py:1-60",
+          "src/requests/sessions.py:673-748",
+          "src/requests/adapters.py:613-719",
+          "src/requests/models.py:857-888"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q31",
+        "question": "How do cookies set by a server end up in the session's cookie jar?",
+        "file_rank": 1,
+        "span_rank": null,
+        "top": [
+          "src/requests/cookies.py:358-364",
+          "src/requests/cookies.py:440-452",
+          "src/requests/cookies.py:349-356",
+          "src/requests/cookies.py:206-223",
+          "src/requests/cookies.py:521-539"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q32",
+        "question": "What happens if two cookies with the same name exist for different domains?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/cookies.py:293-304",
+          "src/requests/cookies.py:386-413",
+          "src/requests/cookies.py:194-204",
+          "src/requests/cookies.py:206-223",
+          "src/requests/cookies.py:366-384"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q33",
+        "question": "How do you build a cookie jar from a plain dictionary?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/cookies.py:521-539",
+          "src/requests/utils.py:467-475",
+          "src/requests/cookies.py:306-319",
+          "src/requests/cookies.py:440-452",
+          "src/requests/utils.py:478-486"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q34",
+        "question": "How do header lookups ignore upper and lower case?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/structures.py:13-39",
+          "src/requests/models.py:483-492",
+          "src/requests/structures.py:46-49",
+          "src/requests/structures.py:63-65",
+          "src/requests/structures.py:54-55"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q35",
+        "question": "What is the default User-Agent string sent with requests?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:891-897",
+          "src/requests/utils.py:900-911",
+          "src/requests/sessions.py:390-449",
+          "src/requests/auth.py:25-66",
+          "src/requests/adapters.py:137-164"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q36",
+        "question": "Which error is raised for a URL without a scheme, like example.com?",
+        "file_rank": 4,
+        "span_rank": 4,
+        "top": [
+          "src/requests/exceptions.py:103-104",
+          "src/requests/exceptions.py:99-100",
+          "src/requests/utils.py:989-1015",
+          "src/requests/models.py:409-481",
+          "src/requests/adapters.py:51-89"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q37",
+        "question": "How are internationalized domain names converted before sending?",
+        "file_rank": 2,
+        "span_rank": null,
+        "top": [
+          "src/requests/cookies.py:455-489",
+          "src/requests/models.py:409-481",
+          "src/requests/cookies.py:194-204",
+          "src/requests/cookies.py:206-223",
+          "src/requests/cookies.py:49-67"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q38",
+        "question": "How are query string parameters encoded into the URL?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:409-481",
+          "src/requests/api.py:62-73",
+          "src/requests/models.py:85-104",
+          "src/requests/models.py:106-134",
+          "src/requests/cookies.py:49-67"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q39",
+        "question": "How are multipart file uploads encoded?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/models.py:494-570",
+          "src/requests/models.py:136-203",
+          "src/requests/api.py:14-59",
+          "src/requests/utils.py:135-201",
+          "src/requests/exceptions.py:146-147"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q40",
+        "question": "How is the request body rewound before it is resent on a redirect?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:1081-1096",
+          "src/requests/sessions.py:209-268",
+          "src/requests/auth.py:285-303",
+          "src/requests/sessions.py:259-280",
+          "src/requests/models.py:494-570"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q41",
+        "question": "How are header names and values checked for illegal characters?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/utils.py:1034-1042",
+          "src/requests/utils.py:442-464",
+          "src/requests/utils.py:1045-1061",
+          "src/requests/_internal_utils.py:1-24",
+          "src/requests/models.py:409-481"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q42",
+        "question": "Where are status code names like codes.ok defined?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/status_codes.py:1-60",
+          "src/requests/status_codes.py:109-125",
+          "src/requests/models.py:754-767",
+          "src/requests/models.py:730-738",
+          "src/requests/status_codes.py:126-128"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q43",
+        "question": "What happens when the response body is not valid JSON?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/models.py:947-978",
+          "src/requests/models.py:494-570",
+          "src/requests/api.py:133-145",
+          "src/requests/utils.py:957-986",
+          "src/requests/exceptions.py:27-28"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q44",
+        "question": "What does requests.get do under the hood?",
+        "file_rank": 1,
+        "span_rank": 1,
+        "top": [
+          "src/requests/api.py:62-73",
+          "src/requests/sessions.py:593-602",
+          "src/requests/cookies.py:194-204",
+          "src/requests/cookies.py:43-44",
+          "src/requests/__init__.py:1-57"
+        ],
+        "answer": null
+      },
+      {
+        "id": "q45",
+        "question": "How are connect timeouts distinguished from read timeouts in the exceptions?",
+        "file_rank": 1,
+        "span_rank": 2,
+        "top": [
+          "src/requests/exceptions.py:71-77",
+          "src/requests/exceptions.py:80-84",
+          "src/requests/adapters.py:613-719",
+          "src/requests/exceptions.py:87-88",
+          "src/requests/adapters.py:1-60"
+        ],
+        "answer": null
+      }
+    ]
+  }
+}

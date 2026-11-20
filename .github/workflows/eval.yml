@@ -1,0 +1,61 @@
+name: tests-and-eval
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write   # only used on main, to commit the refreshed badge/results
+
+jobs:
+  test-and-eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: uv pip install --system -e '.[dev,vector]'
+
+      - name: Unit tests
+        run: pytest -q
+
+      # The pinned clone, embedding model (~64 MB) and index only change when the golden ref,
+      # chunking or embedding code changes, so a cache hit skips the ~2 min rebuild.
+      - uses: actions/cache@v4
+        with:
+          path: .repopilot
+          key: index-${{ hashFiles('evals/golden_requests.json', 'src/repopilot/ingest/**', 'src/repopilot/retrieval/vector.py', 'src/repopilot/config.py') }}
+
+      # Retrieval-only eval: no LLM key needed, deterministic, free.
+      # The gate fails the build if retrieval drops more than ~3 questions below the current
+      # best (91% span hit@5). Raise it when the results log improves.
+      - name: Retrieval eval
+        run: |
+          set -o pipefail
+          repopilot eval --min-span-hit5 0.85 | tee eval_output.txt
+          {
+            echo '### Retrieval eval'
+            sed -n '/^| mode/,/^$/p' eval_output.txt
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: evals/results/
+
+      - name: Commit refreshed badge
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add evals/results/badge.json evals/results/results.json
+          if ! git diff --cached --quiet; then
+            git commit -m "eval: update results [skip ci]"
+            git push
+          fi

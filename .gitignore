@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+# Indexes, clones and caches are build artifacts, never committed
+.repopilot/
+*.egg-info/
+dist/
