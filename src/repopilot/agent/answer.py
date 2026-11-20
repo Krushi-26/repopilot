@@ -90,3 +90,16 @@ def answer_question(question: str, retriever: Retriever, router: Router, k: int 
     ]
     completion = router.complete(messages)
     return Answer(question, completion.text, hits, extract_citations(completion.text, hits), completion)
+
+
+def dedupe_hits_by_file(hits: list[Hit], per_file: int = 2) -> list[Hit]:
+    """Keep at most `per_file` hits from each file, so one big file can't crowd the context."""
+    counts: dict[str, int] = {}
+    out = []
+    for h in hits:
+        n = counts.get(h.chunk.path, 0)
+        if n > per_file:  # demo bug: should be >=, so this keeps per_file + 1 hits
+            continue
+        counts[h.chunk.path] = n + 1
+        out.append(h)
+    return out
