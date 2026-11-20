@@ -18,7 +18,7 @@ Built to run at $0 on free-tier LLM APIs and GitHub Actions.
 | Reranker (cross-encoder, opt-in `--rerank`) | ✅ |
 | Golden eval set (45 questions) + CI gate + badge | ✅ |
 | Agent tool loop (search / open file / read diff) | ⏳ week 3 |
-| PR review bot (GitHub Action) | ⏳ week 3 |
+| PR review bot (GitHub Action, grounded inline comments + test-gap check) | ✅ |
 | MCP server, web demo | stretch |
 
 ## Quick start
@@ -116,6 +116,37 @@ Notes:
   to the LLM, so hit@5/10 matter more. Net: one question for ~1 s per query, so it stays off by default.
 - **Remaining misses:** SOCKS proxies (q23), cookie extraction (q31), IDNA encoding (q37). Next
   ideas: an LLM reranker (needs an API key) or a code-trained cross-encoder.
+
+## PR review bot
+
+[`review.yml`](.github/workflows/review.yml) reviews every non-draft PR and posts one review
+with inline comments.
+
+1. **Diff → line map.** The unified diff is parsed into the exact new-file line numbers GitHub
+   accepts comments on. Deleted, binary, vendored and generated files are skipped.
+2. **Context.** Changed functions are found with `ast`, and their call sites elsewhere in the repo
+   are retrieved, so the model sees who depends on the change.
+3. **LLM review.** The prompt asks for bugs, security issues and behaviour changes only (no style
+   nits), as JSON.
+4. **Grounding, enforced in code.** Every comment must name a file in the diff and a line the PR
+   added, with a known severity. Anything else is discarded and counted in the review footer.
+5. **Automated check, no LLM.** A changed public function that no test mentions gets a 💡
+   suggestion. This still runs when the LLM is rate-limited or no key is set.
+
+**Security model.** A PR is untrusted input. The reviewer's code is installed from the *base*
+branch; the PR's code is checked out only as data and is never installed or run. The model has no
+tools and no secrets in its prompt, and its output is only parsed into comments. The workflow
+uses `pull_request` (not `pull_request_target`), so fork PRs get no secrets, and the bot posts
+`COMMENT` reviews only, so it can never approve or block a merge.
+
+```bash
+repopilot review --git main..HEAD              # preview a local branch
+repopilot review --pr 12 --gh-repo owner/name  # preview a PR (GITHUB_TOKEN for private repos)
+repopilot review --pr 12 --gh-repo owner/name --post
+```
+
+To enable LLM comments in Actions, add a `GROQ_API_KEY` repository secret. Without it the bot
+posts the automated checks only.
 
 ## Development
 

@@ -1,0 +1,58 @@
+name: repopilot-review
+
+# Reviews every non-draft PR and posts one COMMENT review with inline findings.
+#
+# Security model (a PR is untrusted input):
+# - The reviewer's code is checked out from the BASE branch (trusted) into ./tool and
+#   installed from there. The PR's code is checked out into ./pr as data only: it is read,
+#   chunked and searched, but never installed or executed.
+# - `pull_request` (not `pull_request_target`): PRs from forks get a read-only token and no
+#   secrets, so they can't exfiltrate the LLM key. The review then lands in the job summary.
+# - The token can only comment on PRs; the bot never approves or requests changes.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out reviewer (base branch, trusted)
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: tool
+          persist-credentials: false
+
+      - name: Check out PR head (untrusted, read as data only)
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: pr
+          persist-credentials: false
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install reviewer
+        run: pip install ./tool
+
+      - name: Review
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          REPOPILOT_HOME: ${{ runner.temp }}/repopilot
+        run: repopilot review --pr ${{ github.event.pull_request.number }} --root pr --post

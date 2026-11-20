@@ -36,12 +36,25 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--no-embed", action="store_true", help="If the index must be built, build it BM25-only")
     p.add_argument("--rebuild", action="store_true", help="Rebuild the index first (after changing chunking)")
     p.add_argument("--min-span-hit5", type=float, default=None, help="Exit non-zero if the best mode scores below this (CI gate)")
+    p = sub.add_parser("review", help="Review a diff or pull request (preview by default)")
+    src = p.add_mutually_exclusive_group(required=True)
+    src.add_argument("--diff", help="Path to a unified diff file ('-' for stdin)")
+    src.add_argument("--git", metavar="RANGE", help="Review a local git range, e.g. main..HEAD")
+    src.add_argument("--pr", type=int, help="Pull request number (needs --gh-repo or GITHUB_REPOSITORY)")
+    p.add_argument("--gh-repo", help="owner/name (default: $GITHUB_REPOSITORY)")
+    p.add_argument("--root", default=".", help="Checkout of the PR's head, used for context and checks")
+    p.add_argument("--post", action="store_true", help="Post the review to the PR (needs GITHUB_TOKEN)")
+    p.add_argument("--no-llm", action="store_true", help="Automated checks only, no LLM call")
+    p.add_argument("--max-comments", type=int, default=8)
+    p.add_argument("--min-severity", choices=["bug", "security", "risk", "suggestion"], default="suggestion")
     args = ap.parse_args(argv)
 
     from repopilot.ingest.index import build_index, list_indexes, load_index
 
     if args.cmd == "eval":
         return _run_eval(args)
+    if args.cmd == "review":
+        return _run_review(args)
 
     if args.cmd == "index":
         idx = build_index(args.source, ref=args.ref, embed=not args.no_embed, name=args.name)
@@ -144,6 +157,71 @@ def _run_eval(args) -> int:
         if best_score < args.min_span_hit5:
             print(f"FAIL: span_hit@5 {best_score:.0%} < gate {args.min_span_hit5:.0%}", file=sys.stderr)
             return 3
+    return 0
+
+
+def _run_review(args) -> int:
+    import os
+    import subprocess
+    from pathlib import Path
+
+    from repopilot.review.diff import parse_diff
+    from repopilot.review.github import GitHub, GitHubError
+    from repopilot.review.reviewer import review_diff
+
+    root = Path(args.root).resolve()
+    gh = None
+    head_sha = None
+    if args.pr is not None:
+        repo = args.gh_repo or os.environ.get("GITHUB_REPOSITORY")
+        if not repo:
+            print("--pr needs --gh-repo owner/name (or GITHUB_REPOSITORY).", file=sys.stderr)
+            return 1
+        gh = GitHub(os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN"), repo)
+        pr = gh.pr(args.pr)
+        head_sha = pr["head"]["sha"]
+        diff_text = gh.pr_diff(args.pr)
+    elif args.git:
+        diff_text = subprocess.run(["git", "-C", str(root), "diff", args.git], capture_output=True, text=True, check=True).stdout
+    else:
+        diff_text = sys.stdin.read() if args.diff == "-" else Path(args.diff).read_text()
+
+    files = parse_diff(diff_text)
+    if not files:
+        print("Empty diff: nothing to review.")
+        return 0
+
+    router = None
+    if not args.no_llm:
+        from repopilot.llm.router import Router
+
+        router = Router()
+        if not router.providers:
+            print("No LLM key set (GROQ_API_KEY etc.): running automated checks only.", file=sys.stderr)
+            router = None
+
+    review = review_diff(files, root, router, max_comments=args.max_comments, min_severity=args.min_severity)
+    preview = review.to_markdown()
+    for c in review.comments:
+        preview += f"\n\n`{c.path}:{c.line}` [{c.severity}{', check' if c.source == 'check' else ''}]\n{c.body}"
+    if review.dropped:
+        preview += "\n\nDiscarded (failed grounding): " + "; ".join(f"{d.get('path')}:{d.get('line')} ({d['reason']})" for d in review.dropped)
+    print(preview)
+    if summary_path := os.environ.get("GITHUB_STEP_SUMMARY"):
+        with open(summary_path, "a") as f:
+            f.write(preview + "\n")
+
+    if args.post:
+        if gh is None:
+            print("--post only works with --pr.", file=sys.stderr)
+            return 1
+        try:
+            gh.post_review(args.pr, head_sha, review)
+            print(f"\nPosted review with {len(review.comments)} inline comment(s) to {gh.repo}#{args.pr}.")
+        except GitHubError as e:
+            # Fork PRs get a read-only token: the review is still in the job summary.
+            print(f"\nCould not post review ({e}). The review above is in the job summary.", file=sys.stderr)
+            return 0 if e.status in (401, 403) else 1
     return 0
 
 
