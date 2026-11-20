@@ -43,6 +43,9 @@ class Answer:
     hits: list[Hit]
     citations: list[Citation] = field(default_factory=list)
     completion: Completion | None = None
+    steps: list[dict] = field(default_factory=list)  # agent tool calls, in order (empty for single-shot)
+    llm_calls: int = 1
+    tokens: int | None = None  # total across all LLM calls, when the provider reports usage
 
     @property
     def citation_accuracy(self) -> float | None:
@@ -67,15 +70,18 @@ def build_context(hits: list[Hit], max_chars: int = config.MAX_CONTEXT_CHARS) ->
 
 
 def extract_citations(text: str, hits: list[Hit]) -> list[Citation]:
+    return check_citations(text, [(h.chunk.path, h.chunk.start_line, h.chunk.end_line) for h in hits])
+
+
+def check_citations(text: str, spans: list[tuple[str, int, int]]) -> list[Citation]:
+    """A citation is valid if it lies inside one span of code the model was actually shown."""
     out, seen = [], set()
     for path, s, e in CITATION_RE.findall(text):
         start, end = int(s), int(e or s)
         if (path, start, end) in seen:
             continue
         seen.add((path, start, end))
-        valid = any(
-            h.chunk.path == path and h.chunk.start_line <= start <= end <= h.chunk.end_line for h in hits
-        )
+        valid = any(p == path and a <= start <= end <= b for p, a, b in spans)
         out.append(Citation(path, start, end, valid))
     return out
 
@@ -89,4 +95,7 @@ def answer_question(question: str, retriever: Retriever, router: Router, k: int 
         {"role": "user", "content": f"Code excerpts:\n\n{build_context(hits)}\n\nQuestion: {question}"},
     ]
     completion = router.complete(messages)
-    return Answer(question, completion.text, hits, extract_citations(completion.text, hits), completion)
+    return Answer(
+        question, completion.text, hits, extract_citations(completion.text, hits), completion,
+        tokens=(completion.usage or {}).get("total_tokens"),
+    )

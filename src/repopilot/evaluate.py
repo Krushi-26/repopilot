@@ -111,14 +111,18 @@ def eval_retrieval(golden: dict, retriever: Retriever, mode: str, depth: int = 1
     return results
 
 
-def eval_answers(golden: dict, retriever: Retriever, router, mode: str, results: list[QResult], k: int) -> None:
+def eval_answers(golden: dict, retriever: Retriever, router, mode: str, results: list[QResult], k: int, agent: bool = False) -> None:
     from repopilot.agent.answer import answer_question
+    from repopilot.agent.loop import run_agent
 
     by_id = {r.id: r for r in results}
     for q in golden["questions"]:
         targets = resolve_targets(q["expect"], retriever.index.root)
         t0 = time.time()
-        ans = answer_question(q["q"], retriever, router, k=k, mode=mode)
+        if agent:
+            ans = run_agent(q["q"], retriever, router, mode=mode.partition("+")[0])
+        else:
+            ans = answer_question(q["q"], retriever, router, k=k, mode=mode)
         grounded = any(t.overlaps(c.path, c.start, c.end) for c in ans.citations for t in targets)
         by_id[q["id"]].answer = {
             "n_citations": len(ans.citations),
@@ -126,7 +130,9 @@ def eval_answers(golden: dict, retriever: Retriever, router, mode: str, results:
             "grounded": grounded,
             "latency_s": round(time.time() - t0, 2),
             "cached": bool(ans.completion and ans.completion.cached),
-            "tokens": (ans.completion.usage or {}).get("total_tokens") if ans.completion else None,
+            "tokens": ans.tokens,
+            "llm_calls": ans.llm_calls,
+            "tool_calls": sum("tool" in s and not s.get("seed") for s in ans.steps),
         }
 
 
@@ -142,6 +148,10 @@ def summarise(results: list[QResult]) -> dict:
         cites = sum(a["n_citations"] for a in answered)
         s["citation_accuracy"] = (sum(a["valid_citations"] for a in answered) / cites) if cites else 0.0
         s["grounded_rate"] = sum(a["grounded"] for a in answered) / len(answered)
+        s["avg_llm_calls"] = sum(a.get("llm_calls", 1) for a in answered) / len(answered)
+        toks = [a["tokens"] for a in answered if a.get("tokens")]
+        if toks:
+            s["avg_tokens"] = sum(toks) / len(toks)
         s["answered"] = len(answered)
     return {k: round(v, 4) if isinstance(v, float) else v for k, v in s.items()}
 
@@ -173,9 +183,19 @@ def write_report(out_dir: Path, golden: dict, index: Index, runs: dict[str, list
 
 def format_table(report: dict) -> str:
     cols = ["file_hit@1", "file_hit@5", "span_hit@1", "span_hit@5", "span_hit@10", "mrr@10"]
-    extra = [c for c in ("citation_accuracy", "grounded_rate") if any(c in s for s in report["modes"].values())]
-    cols += extra
+    extra = ("citation_accuracy", "grounded_rate", "avg_llm_calls", "avg_tokens")
+    cols += [c for c in extra if any(c in s for s in report["modes"].values())]
     lines = ["| mode | " + " | ".join(cols) + " |", "|---|" + "---|" * len(cols)]
     for m, s in report["modes"].items():
-        lines.append(f"| {m} | " + " | ".join(f"{s[c]:.0%}" if c != "mrr@10" else f"{s[c]:.3f}" for c in cols if c in s) + " |")
+        lines.append(f"| {m} | " + " | ".join(_fmt(c, s[c]) if c in s else "–" for c in cols) + " |")
     return "\n".join(lines)
+
+
+def _fmt(col: str, v: float) -> str:
+    if col == "mrr@10":
+        return f"{v:.3f}"
+    if col == "avg_llm_calls":
+        return f"{v:.1f}"
+    if col == "avg_tokens":
+        return f"{v:,.0f}"
+    return f"{v:.0%}"

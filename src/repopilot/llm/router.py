@@ -33,6 +33,8 @@ class Completion:
     cached: bool
     usage: dict = field(default_factory=dict)
     latency_s: float = 0.0
+    # Normalised tool calls: [{"id": str, "name": str, "arguments": dict}]
+    tool_calls: list[dict] = field(default_factory=list)
 
 
 class Router:
@@ -55,23 +57,34 @@ class Router:
         self.client = httpx.Client(timeout=timeout, transport=transport)
         self.sleep = sleep
 
-    def complete(self, messages: list[dict], temperature: float = 0.0, max_tokens: int = 1024, use_cache: bool = True) -> Completion:
+    def complete(
+        self,
+        messages: list[dict],
+        temperature: float = 0.0,
+        max_tokens: int = 1024,
+        use_cache: bool = True,
+        tools: list[dict] | None = None,
+    ) -> Completion:
+        """`tools`: OpenAI-format function specs. The model may answer with tool_calls instead of text."""
         if not self.providers:
             raise AllProvidersFailed(
                 "No LLM provider configured. Set GROQ_API_KEY (free at console.groq.com) in .env."
             )
-        params = {"temperature": temperature, "max_tokens": max_tokens}
+        params: dict = {"temperature": temperature, "max_tokens": max_tokens}
+        if tools:
+            params["tools"] = tools
+            params["tool_choice"] = "auto"
         errors: list[str] = []
         for p in self.providers:
             key = ResponseCache.key(f"{p.name}/{p.model}", messages, params)
             if use_cache and (hit := self.cache.get(key)):
-                return Completion(hit["text"], p.name, p.model, True, hit.get("usage", {}))
+                return Completion(hit["text"], p.name, p.model, True, hit.get("usage", {}), tool_calls=hit.get("tool_calls", []))
             try:
                 result = self._call_with_retry(p, messages, params)
             except _ProviderError as e:
                 errors.append(f"{p.name}: {e}")
                 continue
-            self.cache.put(key, p.name, p.model, {"text": result.text, "usage": result.usage})
+            self.cache.put(key, p.name, p.model, {"text": result.text, "usage": result.usage, "tool_calls": result.tool_calls})
             return result
         raise AllProvidersFailed("All providers failed:\n  " + "\n  ".join(errors))
 
@@ -92,8 +105,11 @@ class Router:
                 status = resp.status_code
                 if status == 200:
                     data = resp.json()
-                    text = data["choices"][0]["message"].get("content") or ""
-                    c = Completion(text, p.name, p.model, False, data.get("usage", {}), time.time() - t0)
+                    msg = data["choices"][0]["message"]
+                    c = Completion(
+                        msg.get("content") or "", p.name, p.model, False, data.get("usage", {}), time.time() - t0,
+                        tool_calls=_parse_tool_calls(msg.get("tool_calls")),
+                    )
                     _trace(c)
                     return c
                 last = f"HTTP {status}: {resp.text[:200]}"
@@ -112,6 +128,19 @@ class Router:
                 pass
         backoff = min(self.base_delay * 2**attempt, self.max_delay)
         return backoff * (0.5 + random.random() / 2)  # jitter: spread out retries
+
+
+def _parse_tool_calls(raw) -> list[dict]:
+    out = []
+    for i, tc in enumerate(raw or []):
+        fn = tc.get("function") or {}
+        args = fn.get("arguments") or "{}"
+        try:
+            args = json.loads(args) if isinstance(args, str) else dict(args)
+        except (json.JSONDecodeError, TypeError, ValueError):
+            args = {"_invalid_json": str(args)[:500]}
+        out.append({"id": tc.get("id") or f"call_{i}", "name": fn.get("name", ""), "arguments": args})
+    return out
 
 
 class _ProviderError(Exception):

@@ -25,6 +25,9 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("-k", type=int, default=config.TOP_K)
         p.add_argument("--mode", choices=["hybrid", "bm25", "vector"], default="hybrid")
         p.add_argument("--rerank", action="store_true", help="Re-score the top 20 with a cross-encoder (~1 s, opt-in)")
+        if name == "ask":
+            p.add_argument("--agent", action="store_true", help="Let the model explore with tools before answering")
+            p.add_argument("--max-steps", type=int, default=6)
 
     sub.add_parser("list", help="List built indexes")
 
@@ -32,6 +35,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--golden", default="evals/golden_requests.json")
     p.add_argument("--modes", default="auto", help="Comma list of bm25,vector,hybrid[,hybrid+rerank] (default: all available, no rerank)")
     p.add_argument("--answers", action="store_true", help="Also generate answers and score citations (uses the LLM)")
+    p.add_argument("--agent", action="store_true", help="With --answers: use the tool-using agent instead of single-shot")
     p.add_argument("--out", default="evals/results")
     p.add_argument("--no-embed", action="store_true", help="If the index must be built, build it BM25-only")
     p.add_argument("--rebuild", action="store_true", help="Rebuild the index first (after changing chunking)")
@@ -89,17 +93,30 @@ def main(argv: list[str] | None = None) -> int:
     from repopilot.llm.router import AllProvidersFailed, Router
 
     try:
-        ans = answer_question(args.question, retriever, Router(), k=args.k, mode=mode)
+        if args.agent:
+            from repopilot.agent.loop import run_agent
+
+            ans = run_agent(args.question, retriever, Router(), max_steps=args.max_steps, mode=mode.partition("+")[0])
+        else:
+            ans = answer_question(args.question, retriever, Router(), k=args.k, mode=mode)
     except AllProvidersFailed as e:
         print(e, file=sys.stderr)
         return 2
+    for s in ans.steps:
+        if "tool" in s:
+            args_str = ", ".join(f"{k}={v!r}" for k, v in s["args"].items())
+            print(f"  → {s['tool']}({args_str})" + (" [seed]" if s.get("seed") else ""), file=sys.stderr)
+        elif "forced_answer" in s:
+            print(f"  → {s['forced_answer']}: answering with what was found", file=sys.stderr)
     print(ans.text)
     if ans.citations:
         bad = [str(c) for c in ans.citations if not c.valid]
         print(f"\n— {len(ans.citations)} citations, {len(ans.citations) - len(bad)} verified" + (f"; unverified: {', '.join(bad)}" if bad else ""))
     if ans.completion:
         c = ans.completion
-        print(f"— {c.provider}/{c.model}{' (cached)' if c.cached else ''}")
+        calls = f", {ans.llm_calls} LLM calls" if ans.llm_calls > 1 else ""
+        toks = f", {ans.tokens} tokens" if ans.tokens else ""
+        print(f"— {c.provider}/{c.model}{' (cached)' if c.cached else ''}{calls}{toks}")
     return 0
 
 
@@ -136,7 +153,7 @@ def _run_eval(args) -> int:
 
         best = modes[-1]
         try:
-            evaluate.eval_answers(golden, retriever, Router(), best, runs[best], k=config.TOP_K)
+            evaluate.eval_answers(golden, retriever, Router(), best, runs[best], k=config.TOP_K, agent=args.agent)
         except AllProvidersFailed as e:
             print(e, file=sys.stderr)
             return 2

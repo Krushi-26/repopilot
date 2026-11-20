@@ -17,7 +17,7 @@ Built to run at $0 on free-tier LLM APIs and GitHub Actions.
 | LLM layer: retry with backoff, SQLite cache, provider fallback, JSONL traces | ✅ |
 | Reranker (cross-encoder, opt-in `--rerank`) | ✅ |
 | Golden eval set (45 questions) + CI gate + badge | ✅ |
-| Agent tool loop (search / open file / read diff) | ⏳ week 3 |
+| Agent tool loop (search, find definition, read file, list files) | ✅ built; not yet scored with a live LLM |
 | PR review bot (GitHub Action, grounded inline comments + test-gap check) | ✅ |
 | MCP server, web demo | stretch |
 
@@ -116,6 +116,30 @@ Notes:
   to the LLM, so hit@5/10 matter more. Net: one question for ~1 s per query, so it stays off by default.
 - **Remaining misses:** SOCKS proxies (q23), cookie extraction (q31), IDNA encoding (q37). Next
   ideas: an LLM reranker (needs an API key) or a code-trained cross-encoder.
+
+## Agent mode
+
+`repopilot ask --agent` lets the model explore before answering. It starts from the same hybrid
+search as single-shot Q&A, then may call four read-only tools:
+
+| Tool | What it does |
+|---|---|
+| `search_code(query, k)` | hybrid search, returns line-numbered snippets |
+| `find_definition(name)` | exact def/class lookup via `ast`, including methods of small classes; suggests partial matches |
+| `read_file(path, start, end)` | up to 150 lines of an indexed file |
+| `list_files(prefix)` | indexed paths under a prefix |
+
+- **Scoped and read-only.** Paths are matched against the index rather than the filesystem, so
+  `../../etc/passwd` is just "not a file in this repository". There's no shell, network or writes.
+- **Budgets for free tiers.** At most 6 rounds and 4 tool calls per round, results capped at 4k
+  characters, and once the conversation passes about 10k tokens the model is told to answer.
+- **Citations are checked against what the model actually saw.** A citation only counts if those
+  lines came back from a tool. Knowing a function's location from `find_definition` isn't enough.
+
+```bash
+repopilot ask --agent "How are internationalized domain names converted before sending?"
+repopilot eval --answers --agent    # compare with: repopilot eval --answers
+```
 
 ## PR review bot
 
